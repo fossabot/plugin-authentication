@@ -3,7 +3,7 @@ const fs = require('fs')
 const path = require('path')
 
 module.exports = {
-  init: (block, book) => {
+  init: (book) => {
     const providers = [
       {
         name: 'github',
