@@ -1,3 +1,20 @@
-<div class="account">
-    <h2></h2>
-</div>
+<h1><%= title %></h1>
+<form name="account" action="<%= form.url %>" method="<%= form.method %>">
+    <% _.forEach(fields, function(field) { %>
+    <h4><%= field.name %>  <input type="<%= field.type %>" name="<%- field.name.replace(/ /g, '').toLowerCase() %>" placeholder="<%= field.placeholder %>" <% if (field.disabled) { %>disabled<% } %>></h4>
+    <% }); %>
+    <input type="submit">
+</form>
+
+<script>
+  // if (typeof user === 'undefined') {
+  if (typeof user === '') {
+    window.location = 'https://achievement.network/login.html'
+  } else {
+    const user = window.user;
+    user.then(user => {
+      document.forms['account']['email'].value = user.email;
+      document.forms['account']['publickey'].value = user.publicKey;
+    })
+  }
+</script>

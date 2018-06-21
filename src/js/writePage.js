@@ -13,7 +13,10 @@ const writePage = (output, filePath, content) => {
   const index = fs.readFileSync(path.resolve(output.root(), 'index.html'), 'utf8')
   const dom = new JSDOM(index)
 
+  // set page title in HTML
   dom.window.document.title = content.title
+  // and also in the header
+  dom.window.document.querySelector('.book-header > h1 > a').innerHTML = content.title
 
   // newly created page doesn't have navigation, otherwise add it in the summary
   dom.window.document.querySelector('link[rel*="next"]').remove()
@@ -23,9 +26,10 @@ const writePage = (output, filePath, content) => {
   dom.window.document.querySelector('.chapter.active').className =
     dom.window.document.querySelector('.chapter.active').className.replace(/\sactive/, '')
 
+  // set the html body
   dom.window.document.querySelector('.normal.markdown-section').innerHTML = content.body
 
-  filePath = path.join(output.root(), 'login.html')
+  filePath = path.join(output.root(), filePath)
 
   fs.writeFileSync(filePath, dom.serialize())
 }

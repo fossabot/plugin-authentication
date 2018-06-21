@@ -2,16 +2,35 @@ const account = require('./src/js/account')
 const login = require('./src/js/login')
 const writePage = require('./src/js/writePage')
 
-const processAccount = function (block) {
-  return account.init(block, this.book)
+const processAccount = function () {
+  const log = this.book.log
+  log.info('generate page account\n')
+
+  const content = {
+    title: 'My Account',
+    body: account.init()
+  }
+
+  writePage(this.output, 'account.html', content)
+
+  log.debug('account successfully generated\n')
 }
 
-const processLogin = function (block) {
+const processLogin = function () {
   const log = this.book.log
+  log.info('generate page login\n')
 
-  log.error(this)
+  const content = {
+    title: 'Login',
+    body: [
+      '<h1>Login</h1>',
+      login.init(this.book)
+    ].join('\n')
+  }
 
-  return login.init(block, this.book)
+  writePage(this.output, 'login.html', content)
+
+  log.debug('login successfully generated\n')
 }
 
 module.exports = {
@@ -26,20 +45,9 @@ module.exports = {
   },
   hooks: {
     'finish:before': function () {
-      const log = this.book.log
-      log.info('generate page login\n')
 
-      const content = {
-        title: 'Login',
-        body: [
-          '<h1>Login</h1>',
-          login.init(this.book)
-        ].join('\n')
-      }
-
-      writePage(this.output, 'login.html', content)
-
-      log.debug('login successfully generated\n')
+      processLogin.apply(this)
+      processAccount.apply(this)
     }
   },
   filters: {
@@ -48,16 +56,6 @@ module.exports = {
     },
     toURL: function (path) {
       return `/${this.output.toURL(path)}`
-    }
-  },
-  blocks: {
-    login: {
-      parse: false,
-      process: processLogin
-    },
-    account: {
-      parse: false,
-      process: processAccount
     }
   }
 }

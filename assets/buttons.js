@@ -3,7 +3,7 @@
 require(['gitbook'], (gitbook) => {
   const postPublicKey = () => {
     return new Promise((resolve, reject) => {
-      const url = `https://blockchainworkbench.com/api/users`
+      const url = `https://achievement.network/api/users`
       const xhr = new XMLHttpRequest()
       xhr.open('POST', url, true)
       xhr.onreadystatechange = () => {
@@ -22,7 +22,7 @@ require(['gitbook'], (gitbook) => {
   }
 
   const getUser = () => {
-    const url = `https://blockchainworkbench.com/api/users`
+    const url = `https://achievement.network/api/users`
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest()
       xhr.onreadystatechange = () => {
@@ -55,7 +55,7 @@ require(['gitbook'], (gitbook) => {
       position: 'right',
       onClick: (e) => {
         e.preventDefault()
-        window.location = 'https://blockchainworkbench.com/login'
+        window.location = 'https://achievement.network/login'
       },
       id: 'sign-in-button'
     })
@@ -72,7 +72,7 @@ require(['gitbook'], (gitbook) => {
       position: 'right',
       onClick: (e) => {
         e.preventDefault()
-        window.location = 'https://blockchainworkbench.com/api/logout'
+        window.location = 'https://achievement.network/api/logout'
       }
     })
   })

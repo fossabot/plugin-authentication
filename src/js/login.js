@@ -8,12 +8,12 @@ module.exports = {
       {
         name: 'github',
         text: 'Log in with Github',
-        url: 'https://blockchainworkbench.com/api/auth/github'
+        url: 'https://achievement.network/api/auth/github'
       },
       {
         name: 'google',
         text: 'Log in with Google',
-        url: 'https://blockchainworkbench.com/api/auth/google'
+        url: 'https://achievement.network/api/auth/google'
       }
     ]
 
