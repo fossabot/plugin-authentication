@@ -1,20 +1,70 @@
 <h1><%= title %></h1>
 <form name="account" action="<%= form.url %>" method="<%= form.method %>">
     <% _.forEach(fields, function(field) { %>
-    <h4><%= field.name %>  <input type="<%= field.type %>" name="<%- field.name.replace(/ /g, '').toLowerCase() %>" placeholder="<%= field.placeholder %>" <% if (field.disabled) { %>disabled<% } %>></h4>
+    <h4><%= field.name %>  <input type="<%= field.type %>" <% if (field.required) { %>required<% } %> name="<%- field.name.replace(/ /g, '').toLowerCase() %>" placeholder="<%= field.placeholder %>" <% if (field.readonly) { %>readonly<% } %> <% if (field.pattern) { %>pattern=<%= field.pattern %> <% } %>></h4>
     <% }); %>
-    <input type="submit">
+    <input type="submit" class="button" value="Update">
 </form>
 
 <script>
-  // if (typeof user === 'undefined') {
-  if (typeof user === '') {
-    window.location = 'https://achievement.network/login.html'
-  } else {
-    const user = window.user;
-    user.then(user => {
-      document.forms['account']['email'].value = user.email;
-      document.forms['account']['publickey'].value = user.publicKey;
-    })
+  function setUserInformation (user) {
+    document.forms['account']['email'].value = user.email;
+    document.forms['account']['publickey'].value = user.publicKey;
   }
+
+  function autofillForm () {
+    if (location.hostname === 'localhost') {
+      setUserInformation({email: 'test@localhost.com', publicKey: web3.eth.accounts[0]})
+    } else if (typeof user === 'undefined') {
+      window.location = 'https://achievement.network/login.html'
+    } else {
+      const user = window.user;
+      user.then(setUserInformation);
+    }
+  }
+
+  function setListeners () {
+    let form = document.querySelector('form')
+    let submitButton = document.querySelector('input[type="submit"]');
+    // <% _.forEach(fields, function(field) { %>
+      document.querySelector('input[name="<%- field.name.replace(/ /g, "").toLowerCase() %>"]')
+        .addEventListener('input', function() {
+          submitButton.disabled = !form.reportValidity();
+        })
+    // <% }); %>
+    submitButton.disabled = true;
+  }
+
+  function main () {
+    autofillForm();
+    setListeners();
+  }
+
+  main()
 </script>
+
+<style>
+    input {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #d4d7dc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    input[readonly] {
+        background-color: #eeeeee;
+    }
+
+    input:invalid {
+        border: 2px solid red;
+        box-shadow: none;
+    }
+
+    input[type=submit]:disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+</style>

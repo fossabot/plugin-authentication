@@ -14,12 +14,15 @@ module.exports = {
         name: 'Email',
         type: 'email',
         placeholder: 'example@example.com',
-        disabled: true
+        readonly: true,
+        required: true
       },
       {
         name: 'Public Key',
         type: 'publicKey',
-        placeholder: '0x'.padEnd(40, '0')
+        placeholder: '0x'.padEnd(40, '0'),
+        pattern: '0x[0-9a-fA-F]{40}',
+        required: true
       }
     ]
 
