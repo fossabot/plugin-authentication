@@ -1,22 +1,33 @@
-<h1><%= title %></h1>
-<form name="account" action="<%= form.url %>" method="<%= form.method %>">
+<h1><%= title %><iframe width="0" height="0" frameBorder="0" name="_frame" id="_frame"></iframe></h1>
+<form name="account" action="<%= form.url %>" method="<%= form.method %>" target="_frame">
     <% _.forEach(fields, function(field) { %>
-    <h4><%= field.name %>  <input type="<%= field.type %>" <% if (field.required) { %>required<% } %> name="<%- field.name.replace(/ /g, '').toLowerCase() %>" placeholder="<%= field.placeholder %>" <% if (field.readonly) { %>readonly<% } %> <% if (field.pattern) { %>pattern=<%= field.pattern %> <% } %>></h4>
+    <h4><%= field.name %>
+        <input type="<%= field.type %>" <% if (field.required) { %>required<% } %> name="<%= field.type %>" placeholder="<%= field.placeholder %>" <% if (field.readonly) { %>readonly<% } %> <% if (field.pattern) { %>pattern=<%= field.pattern %> <% } %>>
+        <% if (field.button) { %><a class="button field_button" title="<%= field.button.title %>" onclick="buttonFieldClick(this, <%= field.button.click %>)"><i class="fa fa-<%= field.button.icon %>"></i></a><% } %>
+    </h4>
     <% }); %>
-    <input type="submit" class="button" value="Update">
+    <input type="submit" class="button" value="Update" onclick="this.disabled = true">
 </form>
 
 <script>
+  function buttonFieldClick (e, value) {
+    let input = e.parentElement.querySelector('input');
+    if (input.value !== value) {
+      input.value = value;
+      input.dispatchEvent(new Event('input'));
+    }
+  }
+
   function setUserInformation (user) {
     document.forms['account']['email'].value = user.email;
-    document.forms['account']['publickey'].value = user.publicKey;
+    document.forms['account']['publicKey'].value = user.publicKey;
   }
 
   function autofillForm () {
     if (location.hostname === 'localhost') {
-      setUserInformation({email: 'test@localhost.com', publicKey: web3.eth.accounts[0]})
+      setUserInformation({ email: 'test@localhost.com', publicKey: web3.eth.accounts[0] });
     } else if (typeof user === 'undefined') {
-      window.location = 'https://achievement.network/login.html'
+      window.location = 'https://achievement.network/login.html';
     } else {
       const user = window.user;
       user.then(setUserInformation);
@@ -27,7 +38,7 @@
     let form = document.querySelector('form')
     let submitButton = document.querySelector('input[type="submit"]');
     // <% _.forEach(fields, function(field) { %>
-      document.querySelector('input[name="<%- field.name.replace(/ /g, "").toLowerCase() %>"]')
+      document.querySelector('input[name="<%= field.type %>"]')
         .addEventListener('input', function() {
           submitButton.disabled = !form.reportValidity();
         })
@@ -40,7 +51,7 @@
     setListeners();
   }
 
-  main()
+  window.onload = main;
 </script>
 
 <style>
@@ -66,5 +77,20 @@
     input[type=submit]:disabled {
         opacity: 0.5;
         pointer-events: none;
+    }
+
+    .field_button {
+        position: absolute;
+        margin-top: 20px;
+        margin-left: -40px;
+        width: 40px;
+        padding: 0;
+        border: none;
+        color: #333 !important;
+    }
+
+    .field_button:hover {
+        color: #4183c4 !important;
+        cursor: pointer;
     }
 </style>

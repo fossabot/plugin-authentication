@@ -22,7 +22,12 @@ module.exports = {
         type: 'publicKey',
         placeholder: '0x'.padEnd(40, '0'),
         pattern: '0x[0-9a-fA-F]{40}',
-        required: true
+        required: true,
+        button: {
+          icon: 'paste',
+          click: 'web3.eth.accounts[0]',
+          title: 'Paste from Metamask'
+        }
       }
     ]
 
